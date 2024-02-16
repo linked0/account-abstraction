@@ -19,6 +19,8 @@ import "./UserOperationLib.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165.sol" as OpenZeppelin;
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
+import "hardhat/console.sol";
+
 /*
  * Account-Abstraction (EIP-4337) singleton EntryPoint implementation.
  * Only one instance required on each chain.
