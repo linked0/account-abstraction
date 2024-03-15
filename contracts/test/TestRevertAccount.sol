@@ -17,7 +17,14 @@ contract TestRevertAccount is IAccount {
 
     function revertLong(uint256 length) public pure{
         assembly {
-            revert(0, length)
+            let size := 10
+
+            // set the "revertLong" string to the memory
+            let ptr := mload(0x40)
+            mstore(0x40, add(ptr, add(size, 0x20)))
+            mstore(ptr, size)
+            mstore(add(ptr, 0x20), "jay revert")
+            revert(ptr, length)
         }
     }
 }

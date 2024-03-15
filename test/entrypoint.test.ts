@@ -57,7 +57,7 @@ import { BytesLike } from '@ethersproject/bytes'
 import { toChecksumAddress } from 'ethereumjs-util'
 import { getERC165InterfaceID } from '../src/Utils'
 
-describe('EntryPoint', function () {
+describe('@EntryPoint', function () {
   let entryPoint: EntryPoint
   let simpleAccountFactory: SimpleAccountFactory
 
@@ -243,7 +243,7 @@ describe('EntryPoint', function () {
     })
   })
 
-  describe('flickering account validation', () => {
+  describe.only('#flickering account validation', () => {
     it('should prevent leakage of basefee', async function () {
       if (process.env.COVERAGE != null) {
         // coverage disables block.baseFee, which breaks this test...
@@ -346,7 +346,7 @@ describe('EntryPoint', function () {
         }
       })
 
-      it('should prevent detection through paymaster.code.length', async () => {
+      it('should prevent detection through p,aymaster.code.length', async () => {
         const testWarmColdAccount = await new TestWarmColdAccount__factory(ethersSigner).deploy(entryPoint.address,
           { value: parseEther('1') })
         const paymaster = await new TestPaymasterAcceptAll__factory(ethersSigner).deploy(entryPoint.address)

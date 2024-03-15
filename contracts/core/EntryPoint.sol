@@ -87,6 +87,7 @@ contract EntryPoint is IEntryPoint, StakeManager, NonceManager, ReentrancyGuard,
     internal
     returns
     (uint256 collected) {
+        console.log("### _executeUserOp");
         uint256 preGas = gasleft();
         bytes memory context = getMemoryBytesFromOffset(opInfo.contextOffset);
         bool success;
@@ -105,10 +106,12 @@ contract EntryPoint is IEntryPoint, StakeManager, NonceManager, ReentrancyGuard,
                 }
             }
             if (methodSig == IAccountExecute.executeUserOp.selector) {
+                console.log("### IAccountExecute.executeUserOp");
                 bytes memory executeUserOp = abi.encodeCall(IAccountExecute.executeUserOp, (userOp, opInfo.userOpHash));
                 innerCall = abi.encodeCall(this.innerHandleOp, (executeUserOp, opInfo, context));
             } else
             {
+                console.log("### abi.encodeCall");
                 innerCall = abi.encodeCall(this.innerHandleOp, (callData, opInfo, context));
             }
             assembly ("memory-safe") {

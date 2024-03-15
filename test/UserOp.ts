@@ -196,6 +196,7 @@ export async function fillUserOp (op: Partial<UserOperation>, entryPoint?: Entry
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   if (op2.preVerificationGas.toString() === '0') {
     // TODO: we don't add overhead, which is ~21000 for a single TX, but much lower in a batch.
+    console.log("@@@ callDataCost");
     op2.preVerificationGas = callDataCost(encodeUserOp(op2, false))
   }
   return op2
