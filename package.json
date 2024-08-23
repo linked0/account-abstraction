@@ -13,6 +13,8 @@
     "gas-calc": "./scripts/gascalc",
     "mocha-gascalc": "TS_NODE_TRANSPILE_ONLY=1 npx ts-mocha --bail gascalc/*",
     "test": "./scripts/hh-wrapper test",
+    "simple": "./scripts/hh-wrapper test test/simple-wallet.test.ts",
+    "oracle": "./scripts/hh-wrapper test test/samples/OracleHelper.test.ts",
     "coverage": "COVERAGE=1 hardhat coverage",
     "deploy": "./scripts/hh-wrapper deploy",
     "test-dev": "hardhat test --network dev",

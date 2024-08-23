@@ -23,6 +23,7 @@ import {
 import { fillUserOpDefaults, getUserOpHash, encodeUserOp, signUserOp, packUserOp } from './UserOp'
 import { parseEther } from 'ethers/lib/utils'
 import { UserOperation } from './UserOperation'
+import { Provider } from '@ethersproject/providers'
 
 describe('SimpleAccount', function () {
   let entryPoint: string
@@ -30,8 +31,10 @@ describe('SimpleAccount', function () {
   let testUtil: TestUtil
   let accountOwner: Wallet
   const ethersSigner = ethers.provider.getSigner()
+  let provider: Provider
 
   before(async function () {
+    provider = ethers.provider
     entryPoint = await deployEntryPoint().then(e => e.address)
     accounts = await ethers.provider.listAccounts()
     // ignore in geth.. this is just a sanity test. should be refactored to use a single-account mode..
@@ -43,7 +46,9 @@ describe('SimpleAccount', function () {
   it('owner should be able to call transfer', async () => {
     const { proxy: account } = await createAccount(ethers.provider.getSigner(), accounts[0], entryPoint)
     await ethersSigner.sendTransaction({ from: accounts[0], to: account.address, value: parseEther('2') })
+    console.log(`balance of account: ${(await provider.getBalance(account.address)).toString()}`)
     await account.execute(accounts[2], ONE_ETH, '0x')
+    console.log(`balance of account again: ${(await provider.getBalance(account.address)).toString()}`)
   })
   it('other account should not be able to call transfer', async () => {
     const { proxy: account } = await createAccount(ethers.provider.getSigner(), accounts[0], entryPoint)
@@ -80,6 +85,7 @@ describe('SimpleAccount', function () {
     it('should allow transfer value', async () => {
       const counterJustEmit = await counter.populateTransaction.justemit().then(tx => tx.data!)
       const target = createAddress()
+      console.log(`balance of target: ${(await provider.getBalance(target)).toString()}`)
       await ethersSigner.sendTransaction({ from: accounts[0], to: account.address, value: parseEther('2') })
       const rcpt = await account.executeBatch(
         [target, counter.address],
@@ -87,6 +93,7 @@ describe('SimpleAccount', function () {
         ['0x', counterJustEmit]
       ).then(async t => await t.wait())
       expect(await ethers.provider.getBalance(target)).to.equal(ONE_ETH)
+      console.log(`balance of target: ${(await provider.getBalance(target)).toString()}`)
       const targetLogs = await counter.queryFilter(counter.filters.CalledFrom(), rcpt.blockHash)
       expect(targetLogs.length).to.eq(1)
     })
